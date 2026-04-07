@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as l,ag as o}from"./chunks/framework.DXGyWiRo.js";const _=JSON.parse('{"title":"高中数学学习网站","description":"","frontmatter":{},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),i={name:"index.md"};function r(n,a,h,d,s,c){return t(),l("div",null,[...a[0]||(a[0]=[o("",13)])])}const b=e(i,[["render",r]]);export{_ as __pageData,b as default};
