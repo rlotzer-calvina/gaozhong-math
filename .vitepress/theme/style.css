@@ -1,0 +1,108 @@
+/**
+ * VitePress Theme Overrides
+ * Design System: "Scholastic Horizon" - A premium, modern learning aesthetic
+ */
+
+:root {
+  /* Typography */
+  --vp-font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  
+  /* Brand Colors - High-end Sapphire to Violet */
+  --vp-c-brand: #7E3AF2;
+  --vp-c-brand-light: #9061F9;
+  --vp-c-brand-lighter: #CABFFD;
+  --vp-c-brand-dark: #6C2BD9;
+  --vp-c-brand-darker: #5521B5;
+
+  /* Button and Interaction Colors */
+  --vp-c-brand-1: var(--vp-c-brand);
+  --vp-c-brand-2: var(--vp-c-brand-light);
+  --vp-c-brand-3: var(--vp-c-brand-lighter);
+
+  /* Navbar styling for Glassmorphism */
+  --vp-nav-bg-color: rgba(255, 255, 255, 0.7);
+}
+
+.dark {
+  /* Dark mode adjustments */
+  --vp-c-brand: #9061F9;
+  --vp-c-brand-light: #CABFFD;
+  --vp-c-brand-lighter: #E0D4FF;
+  --vp-c-brand-dark: #7E3AF2;
+  --vp-c-brand-darker: #6C2BD9;
+
+  /* Navbar styling for Glassmorphism */
+  --vp-nav-bg-color: rgba(24, 24, 27, 0.7);
+}
+
+/* Glassmorphism Navbar */
+.VPNavBar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Beautiful Hero Background Gradient */
+.VPHero {
+  position: relative;
+  overflow: hidden;
+}
+
+.VPHero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(126, 58, 242, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(144, 97, 249, 0.15) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.VPHero .name {
+  font-family: 'Outfit', var(--vp-font-family-base);
+  background: -webkit-linear-gradient(120deg, var(--vp-c-brand), #E0D4FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.VPHero .text {
+  font-family: 'Outfit', var(--vp-font-family-base);
+  font-weight: 700;
+}
+
+/* Card Hover Micro-animations */
+.VPFeature {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid var(--vp-c-bg-soft);
+  background-color: var(--vp-c-bg-soft);
+}
+
+.VPFeature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  border-color: var(--vp-c-brand-light);
+}
+
+.dark .VPFeature:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Button enhancements */
+.VPButton.brand {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(126, 58, 242, 0.3);
+}
+
+.VPButton.brand:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px -2px rgba(126, 58, 242, 0.4);
+}
+
+/* KaTeX adjustments for nicer contrast in dark mode */
+.dark .katex {
+  color: var(--vp-c-text-1);
+}
