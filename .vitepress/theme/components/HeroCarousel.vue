@@ -92,7 +92,11 @@ const updateTagline = (initial = false) => {
             frontmatter.value.hero.text = currentItem.tagline;
             frontmatter.value.hero.tagline = currentItem.desc;
           }
-          // Use a small additional delay to ensure Vue has updated the DOM
+          // Force direct DOM update to bypass potential VitePress reactivity limits
+          if (titleEl) titleEl.innerHTML = currentItem.tagline;
+          if (descEl) descEl.innerHTML = currentItem.desc;
+
+          // Use a small additional delay to ensure Vue has updated the DOM (if reactive) and to apply opacity
           setTimeout(() => {
             if (titleEl) titleEl.style.opacity = '1';
             if (descEl) descEl.style.opacity = '1';
@@ -103,6 +107,12 @@ const updateTagline = (initial = false) => {
     }
     frontmatter.value.hero.text = currentItem.tagline;
     frontmatter.value.hero.tagline = currentItem.desc;
+    
+    // Also apply direct DOM update for the non-animated initial path
+    const titleElInit = document.querySelector('.VPHero .text');
+    const descElInit = document.querySelector('.VPHero .tagline');
+    if (titleElInit) titleElInit.innerHTML = currentItem.tagline;
+    if (descElInit) descElInit.innerHTML = currentItem.desc;
   }
 }
 
