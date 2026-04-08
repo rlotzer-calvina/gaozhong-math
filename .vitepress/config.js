@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 import markdownItMathjax3 from 'markdown-it-mathjax3'
 
 export default defineConfig({
-  base: '/gaozhong-math/',
+  base: '/',
   title: '高中数学',
   description: '沪教版高中数学知识点与典型例题',
   srcDir: '.',
