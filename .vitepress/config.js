@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import markdownItKatex from 'markdown-it-katex'
 
 export default defineConfig({
+  base: '/gaozhong-math/',
   title: '高中数学',
   description: '沪教版高中数学知识点与典型例题',
   srcDir: '.',
