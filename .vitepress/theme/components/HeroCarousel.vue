@@ -11,28 +11,32 @@ const items = [
     name: 'René Descartes',
     quote: 'Cogito, ergo sum',
     contribution: '解析几何之父',
-    dynamicText: '从代数到几何的跨越 —— 掌握直角坐标系，重塑解析几何思维。'
+    tagline: '坐标之父，把直觉变成语言',
+    desc: '1637年，笛卡尔躺在床上凝视飞蝇，忽然想到用数字描述它的位置——解析几何由此诞生。代数与几何，两个孤立的世界，在他的笔下第一次握手。'
   },
   {
     image: withBase('/images/euler.png'),
     name: 'Leonhard Euler',
     quote: 'E^iπ + 1 = 0',
     contribution: '拓展数学边界',
-    dynamicText: '数学语言的定义者 —— 探索 $e, i, \\sum$ 的奥秘，领略最美数学公式。'
+    tagline: '失明之后，他写得更多了',
+    desc: '欧拉双目失明后，产量反而翻倍。他说：干扰少了。一生写下886部著作，几乎触及数学的每一个角落，e, i, π, 1, 0 在他手中第一次相遇。'
   },
   {
     image: withBase('/images/newton-leibniz.png'),
     name: 'Newton & Leibniz',
     quote: '站在巨人的肩膀上',
     contribution: '微积分创立者',
-    dynamicText: '触摸变化的极限 —— 深入理解导数与积分，开启高等数学之门。'
+    tagline: '两人同时触碰了同一个真理',
+    desc: '牛顿与莱布尼茨相隔英吉利海峡，互不知情，却在同一个十年里各自发明了微积分。这不是巧合，而是时代在召唤。真理不属于任何人，它只是在等待被发现。'
   },
   {
     image: withBase('/images/gauss.png'),
     name: 'Carl Friedrich Gauss',
     quote: '数学是科学的女王',
     contribution: '数学王子',
-    dynamicText: '数学王子的严谨逻辑 —— 从等差数列到概率统计，构建严密的知识体系。'
+    tagline: '九岁时，他就看见了数字的秩序',
+    desc: '老师让全班从1加到100，以为能让高斯安静一会儿。他几乎立刻写下了5050。他不是算得快，而是看见了数字背后的深层结构。数学的本质，不是计算，而是洞见。'
   }
 ]
 
@@ -63,34 +67,39 @@ const lightenColor = (hex, percent) => {
 const updateTagline = (initial = false) => {
   if (frontmatter.value && frontmatter.value.hero) {
     const currentName = items[currentIndex.value].name;
+    const currentItem = items[currentIndex.value];
     let newColor = themeMap[currentName];
 
-    // Boost brightness if dark mode is active to ensure visual tension
     if (isDark.value) {
       newColor = lightenColor(newColor, 0.25);
     }
 
     if (typeof document !== 'undefined') {
-      // Update global theme colors
       document.documentElement.style.setProperty('--vp-c-brand', newColor);
       document.documentElement.style.setProperty('--vp-c-brand-1', newColor);
       document.documentElement.style.setProperty('--vp-c-brand-2', newColor);
       document.documentElement.style.setProperty('--vp-c-brand-3', newColor);
 
-      const taglineEl = document.querySelector('.tagline') || document.querySelector('.VPHero .text');
-      if (!initial && taglineEl) {
-        taglineEl.style.transition = 'opacity 0.4s ease-in-out';
-        taglineEl.style.opacity = '0';
+      const titleEl = document.querySelector('.VPHero .text');
+      const descEl = document.querySelector('.VPHero .tagline');
+
+      if (!initial && (titleEl || descEl)) {
+        if (titleEl) titleEl.style.opacity = '0';
+        if (descEl) descEl.style.opacity = '0';
+        
         setTimeout(() => {
           if (frontmatter.value.hero) {
-            frontmatter.value.hero.tagline = items[currentIndex.value].dynamicText;
+            frontmatter.value.hero.text = currentItem.tagline;
+            frontmatter.value.hero.tagline = currentItem.desc;
           }
-          taglineEl.style.opacity = '1';
+          if (titleEl) titleEl.style.opacity = '1';
+          if (descEl) descEl.style.opacity = '1';
         }, 400);
         return;
       }
     }
-    frontmatter.value.hero.tagline = items[currentIndex.value].dynamicText;
+    frontmatter.value.hero.text = currentItem.tagline;
+    frontmatter.value.hero.tagline = currentItem.desc;
   }
 }
 
@@ -223,9 +232,32 @@ onUnmounted(() => {
 </style>
 
 <style>
-/* Override VPHero Text Title */
+/* Global Hero Overrides for Stability & Transition */
+.VPHero .text,
+.VPHero .tagline {
+  transition: opacity 0.4s ease-in-out !important;
+}
+
 .VPHero .text {
-  font-size: clamp(2rem, 4vw, 2.2rem) !important;
-  white-space: nowrap !important;
+  font-size: clamp(1.8rem, 4vw, 2.2rem) !important;
+  min-height: 1.5em; /* Prevent vertical jitter */
+  white-space: normal !important; /* Allow wrapping if needed, but we clamp height */
+}
+
+.VPHero .tagline {
+  min-height: 3.6em; /* Typical 3 lines height */
+  margin-bottom: 24px !important;
+  max-width: 500px;
+}
+
+@media (max-width: 960px) {
+  .VPHero .text {
+    min-height: auto;
+    white-space: normal !important;
+  }
+  .VPHero .tagline {
+    min-height: auto;
+    max-width: 100%;
+  }
 }
 </style>
