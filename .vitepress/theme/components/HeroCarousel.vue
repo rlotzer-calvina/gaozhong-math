@@ -221,3 +221,11 @@ onUnmounted(() => {
   opacity: 0;
 }
 </style>
+
+<style>
+/* Override VPHero Text Title */
+.VPHero .text {
+  font-size: clamp(2rem, 4vw, 2.2rem) !important;
+  white-space: nowrap !important;
+}
+</style>

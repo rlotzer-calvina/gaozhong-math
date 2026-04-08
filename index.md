@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: 开始学习
-      link: /notes/gaozhong/gaoyi/chapter01-sets/
+      link: ./chapters/sets
     - theme: alt
       text: 在 GitHub 上查看
       link: https://github.com/rlotzer-calvina/gaozhong-math

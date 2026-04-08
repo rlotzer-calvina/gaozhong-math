@@ -13,10 +13,10 @@ const { Layout } = DefaultTheme
     
     <template #home-hero-actions-after>
       <div class="quick-tags">
-        <a href="/notes/gaozhong/gaoyi/chapter01-sets/" class="quick-tag">集合</a>
-        <a href="/notes/gaozhong/gaoyi/chapter02-inequalities/" class="quick-tag">不等式</a>
-        <a href="/notes/gaozhong/gaoyi/chapter03-functions/" class="quick-tag">函数</a>
-        <a href="/notes/gaozhong/gaoyi/chapter04-trigonometry/" class="quick-tag">三角比</a>
+        <a href="./chapters/sets" class="quick-tag">集合</a>
+        <a href="./chapters/coming-soon" class="quick-tag">不等式</a>
+        <a href="./chapters/coming-soon" class="quick-tag">函数</a>
+        <a href="./chapters/coming-soon" class="quick-tag">三角比</a>
       </div>
     </template>
   </Layout>

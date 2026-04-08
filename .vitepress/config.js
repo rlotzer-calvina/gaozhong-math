@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import markdownItKatex from 'markdown-it-katex'
+import markdownItMathjax3 from 'markdown-it-mathjax3'
 
 export default defineConfig({
   base: '/gaozhong-math/',
@@ -16,30 +16,37 @@ export default defineConfig({
   ],
   markdown: {
     config: (md) => {
-      md.use(markdownItKatex)
+      md.use(markdownItMathjax3)
     }
   },
   themeConfig: {
     siteTitle: '高中数学',
     nav: [
       { text: '首页', link: '/' },
-      { text: '高一数学', link: '/notes/gaozhong/gaoyi/chapter01-sets/' },
+      { text: '高一数学', link: '/chapters/sets' },
     ],
     sidebar: {
-      '/notes/gaozhong/': [
+      '/chapters/': [
         {
-          text: '高一数学',
+          text: '第一章：集合与常用逻辑用语',
           items: [
-            {
-              text: '第一章：集合',
-              link: '/notes/gaozhong/gaoyi/chapter01-sets/',
-            },
+            { text: '完全指南 (集合与逻辑)', link: '/chapters/sets' },
+            { text: '1.1 集合的概念与表示', link: '/chapters/coming-soon' },
+            { text: '1.2 集合之间的关系', link: '/chapters/coming-soon' },
+            { text: '1.3 集合的运算', link: '/chapters/coming-soon' },
+            { text: '1.4 充分条件与必要条件', link: '/chapters/coming-soon' },
+            { text: '1.5 全称量词与存在量词', link: '/chapters/coming-soon' },
+            { text: '1.6 反证法', link: '/chapters/coming-soon' }
           ]
         }
       ]
     },
     search: {
       provider: 'local'
+    },
+    footer: {
+      message: '© 2026 John’s Math Hub',
+      copyright: 'Built with ❤️ @ SES (Shanghai Experimental School)'
     }
   }
 })
