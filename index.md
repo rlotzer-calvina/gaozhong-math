@@ -12,10 +12,6 @@ hero:
     - theme: alt
       text: 在 GitHub 上查看
       link: https://github.com/rlotzer-calvina/gaozhong-math
-  image:
-    alt: 高中数学
-    dark: /cover.png
-    light: /cover.png
 
 features:
   - title: 📱 多端自适应支持
