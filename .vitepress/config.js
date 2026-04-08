@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import markdownItKatex from 'markdown-it-katex'
 
 export default defineConfig({
   title: '高中数学',
@@ -6,8 +7,14 @@ export default defineConfig({
   srcDir: '.',
   ignoreDeadLinks: true,
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }]
+    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css' }]
   ],
+  markdown: {
+    config: (md) => {
+      md.use(markdownItKatex)
+    }
+  },
   themeConfig: {
     siteTitle: '高中数学',
     nav: [
