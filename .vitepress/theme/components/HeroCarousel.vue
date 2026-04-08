@@ -92,8 +92,11 @@ const updateTagline = (initial = false) => {
             frontmatter.value.hero.text = currentItem.tagline;
             frontmatter.value.hero.tagline = currentItem.desc;
           }
-          if (titleEl) titleEl.style.opacity = '1';
-          if (descEl) descEl.style.opacity = '1';
+          // Use a small additional delay to ensure Vue has updated the DOM
+          setTimeout(() => {
+            if (titleEl) titleEl.style.opacity = '1';
+            if (descEl) descEl.style.opacity = '1';
+          }, 50); 
         }, 400);
         return;
       }
