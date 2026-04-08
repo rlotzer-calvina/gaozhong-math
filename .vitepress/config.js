@@ -31,12 +31,12 @@ export default defineConfig({
           text: '第一章：集合与常用逻辑用语',
           items: [
             { text: '完全指南 (集合与逻辑)', link: '/chapters/sets' },
-            { text: '1.1 集合的概念与表示', link: '/chapters/coming-soon' },
-            { text: '1.2 集合之间的关系', link: '/chapters/coming-soon' },
-            { text: '1.3 集合的运算', link: '/chapters/coming-soon' },
-            { text: '1.4 充分条件与必要条件', link: '/chapters/coming-soon' },
-            { text: '1.5 全称量词与存在量词', link: '/chapters/coming-soon' },
-            { text: '1.6 反证法', link: '/chapters/coming-soon' }
+            { text: '1.1 集合的概念与表示', link: '/chapters/1-1-concepts' },
+            { text: '1.2 集合之间的关系', link: '/chapters/1-2-relations' },
+            { text: '1.3 集合的运算', link: '/chapters/1-3-operations' },
+            { text: '1.4 充分条件与必要条件', link: '/chapters/1-4-conditions' },
+            { text: '1.5 全称量词与存在量词', link: '/chapters/1-5-quantifiers' },
+            { text: '1.6 反证法', link: '/chapters/1-6-proofs' }
           ]
         }
       ]
