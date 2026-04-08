@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: 高中数学
-  text: 探索数学之美，掌握核心概念
+  text: 更优雅的查阅与学习体验
   tagline: 沪教版高中数学知识站点，优雅准确的 KaTeX 数学排版，方便您随时查询与学习。
   actions:
     - theme: brand
@@ -14,14 +14,21 @@ hero:
       link: https://github.com/rlotzer-calvina/gaozhong-math
 
 features:
-  - title: 📱 多端自适应支持
-    details: 无论是在电脑、平板还是手机上，都能获得完美的阅读和交互体验。随时利用碎片时间巩固数学。
-  - title: 🔍 极速本地搜索
-    details: 提供快速强大的本地内容索引。轻松在全站中找到需要的公理、公式以及知识大纲。
-  - title: 📚 体系化精排内容
-    details: 紧贴沪教版大纲，按照“知识点-例题-解析”三步走组织结构，内置高频考点。
+  - title: 📱 全平台无缝适配
+    details: 无论是在电脑、平板还是手机端，都能获得卓越的阅读与交互体验。随时利用碎片化时间巩固数学。
+  - title: ⚡ 极速毫秒级检索
+    details: 提供快速强大的原生内容索引支撑。眨眼之间就能在全站检索到所需的核心公理、公式及知识节点。
+  - title: 📚 紧贴沪教版大纲
+    details: 采用“知识体系-经典例题-详细解析”三段式编排设计，深挖重点常考题型，完全匹配教学进度。
 ---
 
 <style>
-/* You can define specific overrides here if needed, but we'll use style.css */
+.VPHero .VPButton.alt {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background-color: transparent !important;
+}
+
+.VPHero .VPButton.alt:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
 </style>
