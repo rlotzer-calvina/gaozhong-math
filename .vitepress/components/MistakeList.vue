@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import mistakesData from '../../docs/data/mistakes.json'
+import katex from 'katex'
+import 'katex/dist/katex.min.css'
 
 const mistakes = ref(mistakesData)
 const selectedIds = ref([])
@@ -74,8 +76,17 @@ const printPage = () => {
   window.print()
 }
 
-// Parse markdown/math if necessary. For now, VitePress doesn't parse math in Vue component templates automatically unless we use something or it is static.
-// Since user has Katex css but mathjax3 in md, let's just render the text. If they need parsing inside Vue, they might need a library, but let's stick to basics first.
+// Math Rendering
+const renderMath = (text) => {
+  if (!text) return ''
+  return text.replace(/\$([\s\S]+?)\$/g, (match, math) => {
+    try {
+      return katex.renderToString(math, { throwOnError: false })
+    } catch (e) {
+      return match
+    }
+  })
+}
 </script>
 
 <template>
@@ -141,16 +152,15 @@ const printPage = () => {
         </div>
         
         <div class="card-body">
-          <div class="question-content">
-            {{ mistake.question }}
+          <div class="question-content" v-html="renderMath(mistake.question_latex || mistake.question)">
           </div>
           
           <div class="answer-section" v-show="showAnswers[mistake.id] || false">
             <div class="answer-block">
-              <strong>【答案】</strong> {{ mistake.answer }}
+              <strong>【答案】</strong> <span v-html="renderMath(mistake.answer_latex || mistake.answer)"></span>
             </div>
             <div class="analysis-block">
-              <strong>【解析】</strong> {{ mistake.analysis }}
+              <strong>【解析】</strong> <span v-html="renderMath(mistake.analysis)"></span>
             </div>
           </div>
         </div>
