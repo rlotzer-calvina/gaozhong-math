@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import mistakesData from '../../docs/data/mistakes.json'
 import katex from 'katex'
+import 'katex/dist/katex.min.css'
 
 const mistakes = ref(mistakesData)
 const selectedIds = ref([])
@@ -78,26 +79,23 @@ const printPage = () => {
 // Math Rendering
 const renderMath = (text) => {
   if (!text) return '';
-  // 第一步：预处理，将 JSON 可能产生的双反斜杠还原，确保 KaTeX 能识别指令
-  let processedText = text.replace(/\\\\/g, '\\');
   
-  // 第二步：执行正则替换，匹配 $...$ 格式
-  return processedText.replace(/\$([\s\S]+?)\$/g, (match, formula) => {
+  // 【关键步骤】处理 JSON 双转义：将 \\ 替换为 \，处理常见 LaTeX 符号
+  let cleanText = text
+    .replace(/\\\\/g, '\\')      // 还原双斜杠
+    .replace(/\\\{/g, '{')      // 还原大括号转义
+    .replace(/\\\}/g, '}');     // 还原大括号转义
+
+  // 匹配 $...$ 格式并执行 KaTeX 渲染
+  return cleanText.replace(/\$([\s\S]+?)\$/g, (match, formula) => {
     try {
-      // 移除公式首尾空格并渲染
-      const cleanFormula = formula.trim();
-      return katex.renderToString(cleanFormula, {
+      return katex.renderToString(formula.trim(), {
         throwOnError: false,
         displayMode: false,
-        macros: { 
-          "\\mid": "|",
-          "\\leqslant": "\\le",
-          "\\geqslant": "\\ge"
-        }
+        macros: { "\\mid": "|" } 
       });
     } catch (e) {
-      console.error("KaTeX error:", e);
-      return match; // 渲染失败则回退到原始文本
+      return match; // 失败则回退原始
     }
   });
 };
@@ -166,15 +164,14 @@ const renderMath = (text) => {
         </div>
         
         <div class="card-body">
-          <div class="question-content" v-html="renderMath(mistake.question_latex || mistake.question)">
-          </div>
+          <div class="question" v-html="renderMath(mistake.question_latex || mistake.question)"></div>
           
           <div class="answer-section" v-show="showAnswers[mistake.id] || false">
             <div class="answer-block">
               <strong>【答案】</strong> <span v-html="renderMath(mistake.answer_latex || mistake.answer)"></span>
             </div>
             <div class="analysis-block">
-              <strong>【解析】</strong> <span v-html="renderMath(mistake.analysis)"></span>
+              <strong>【解析】</strong> <div class="analysis-content" v-html="renderMath(mistake.analysis)"></div>
             </div>
           </div>
         </div>
@@ -190,15 +187,8 @@ const renderMath = (text) => {
 </template>
 
 <style scoped>
-/* 使用 :deep 穿透组件样式隔离，确保动态生成的 KaTeX 元素能获得样式 */
-:deep(.katex) {
-  font-size: 1.15em !important;
-  font-family: KaTeX_Main, 'Times New Roman', serif !important;
-  line-height: 1.2 !important;
-}
-:deep(.katex-html) {
-  padding: 0 2px !important;
-}
+:deep(.katex) { font-size: 1.1em !important; }
+:deep(.katex-html) { white-space: normal !important; }
 
 .mistake-system {
   font-family: inherit;
