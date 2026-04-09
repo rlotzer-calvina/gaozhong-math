@@ -33,7 +33,9 @@ const filteredMistakes = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     result = result.filter(m => 
+      (m.question_latex && m.question_latex.toLowerCase().includes(query)) || 
       (m.question && m.question.toLowerCase().includes(query)) || 
+      (m.analysis_latex && m.analysis_latex.toLowerCase().includes(query)) || 
       (m.analysis && m.analysis.toLowerCase().includes(query))
     )
   }
@@ -160,14 +162,14 @@ const renderMath = (text) => {
         </div>
         
         <div class="card-body">
-          <div v-html="renderMath(mistake.question_latex)"></div>
+          <div v-html="renderMath(mistake.question_latex || mistake.question)"></div>
           
           <div class="answer-section" v-show="showAnswers[mistake.id] || false">
             <div class="answer-block">
-              <strong>【答案】</strong> <div v-html="renderMath(mistake.answer_latex)"></div>
+              <strong>【答案】</strong> <div v-html="renderMath(mistake.answer_latex || mistake.answer)"></div>
             </div>
             <div class="analysis-block">
-              <strong>【解析】</strong> <div v-html="renderMath(mistake.analysis)"></div>
+              <strong>【解析】</strong> <div v-html="renderMath(mistake.analysis_latex || mistake.analysis)"></div>
             </div>
           </div>
         </div>
