@@ -78,15 +78,26 @@ const printPage = () => {
 // Math Rendering
 const renderMath = (text) => {
   if (!text) return '';
-  // 匹配 $...$ 格式，注意处理 JSON 可能存在的双反斜杠转义
-  return text.replace(/\$([\s\S]+?)\$/g, (match, formula) => {
+  // 第一步：预处理，将 JSON 可能产生的双反斜杠还原，确保 KaTeX 能识别指令
+  let processedText = text.replace(/\\\\/g, '\\');
+  
+  // 第二步：执行正则替换，匹配 $...$ 格式
+  return processedText.replace(/\$([\s\S]+?)\$/g, (match, formula) => {
     try {
-      return katex.renderToString(formula, {
+      // 移除公式首尾空格并渲染
+      const cleanFormula = formula.trim();
+      return katex.renderToString(cleanFormula, {
         throwOnError: false,
-        displayMode: false
+        displayMode: false,
+        macros: { 
+          "\\mid": "|",
+          "\\leqslant": "\\le",
+          "\\geqslant": "\\ge"
+        }
       });
     } catch (e) {
-      return match;
+      console.error("KaTeX error:", e);
+      return match; // 渲染失败则回退到原始文本
     }
   });
 };
@@ -179,6 +190,16 @@ const renderMath = (text) => {
 </template>
 
 <style scoped>
+/* 使用 :deep 穿透组件样式隔离，确保动态生成的 KaTeX 元素能获得样式 */
+:deep(.katex) {
+  font-size: 1.15em !important;
+  font-family: KaTeX_Main, 'Times New Roman', serif !important;
+  line-height: 1.2 !important;
+}
+:deep(.katex-html) {
+  padding: 0 2px !important;
+}
+
 .mistake-system {
   font-family: inherit;
   color: var(--vp-c-text-1);
