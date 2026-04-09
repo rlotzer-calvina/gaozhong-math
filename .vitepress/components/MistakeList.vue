@@ -8,10 +8,48 @@ const showAnswers = ref({})
 const showAllAnswers = ref(false)
 const addMarginBottom = ref(false)
 
+// Search and Filter State
+const searchQuery = ref('')
+const selectedChapter = ref('')
+const sortOrder = ref('desc')
+
+// Computed unique chapters
+const chapters = computed(() => {
+  return [...new Set(mistakes.value.map(m => m.chapter))]
+})
+
+// Computed filtered mistakes
+const filteredMistakes = computed(() => {
+  let result = mistakes.value
+
+  // Filter by chapter
+  if (selectedChapter.value) {
+    result = result.filter(m => m.chapter === selectedChapter.value)
+  }
+
+  // Filter by search query (question or analysis)
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    result = result.filter(m => 
+      (m.question && m.question.toLowerCase().includes(query)) || 
+      (m.analysis && m.analysis.toLowerCase().includes(query))
+    )
+  }
+
+  // Sort by date
+  result = result.slice().sort((a, b) => {
+    const timeA = new Date(a.date || 0).getTime()
+    const timeB = new Date(b.date || 0).getTime()
+    return sortOrder.value === 'desc' ? timeB - timeA : timeA - timeB
+  })
+
+  return result
+})
+
 // Select all or none
 const selectAll = (event) => {
   if (event.target.checked) {
-    selectedIds.value = mistakes.value.map(m => m.id)
+    selectedIds.value = filteredMistakes.value.map(m => m.id)
   } else {
     selectedIds.value = []
   }
@@ -25,7 +63,7 @@ const toggleAnswer = (id) => {
 // Toggle all answers
 const toggleAllAnswers = () => {
   const current = showAllAnswers.value
-  mistakes.value.forEach(m => {
+  filteredMistakes.value.forEach(m => {
     showAnswers.value[m.id] = !current
   })
   showAllAnswers.value = !current
@@ -42,11 +80,31 @@ const printPage = () => {
 
 <template>
   <div class="mistake-system">
+    <!-- Search and Filter Panel -->
+    <div class="search-panel no-print">
+      <input 
+        type="text" 
+        v-model="searchQuery" 
+        placeholder="检索题目或解析中的关键词..." 
+        class="filter-input input-text"
+      />
+      <select v-model="selectedChapter" class="filter-input select-box">
+        <option value="">全部章节</option>
+        <option v-for="chapter in chapters" :key="chapter" :value="chapter">
+          {{ chapter }}
+        </option>
+      </select>
+      <select v-model="sortOrder" class="filter-input select-box">
+        <option value="desc">按时间降序</option>
+        <option value="asc">按时间升序</option>
+      </select>
+    </div>
+
     <!-- Print Control Panel -->
     <div class="print-controls no-print">
       <div class="control-group">
         <label class="control-label">
-          <input type="checkbox" @change="selectAll" :checked="selectedIds.length === mistakes.length && mistakes.length > 0" />
+          <input type="checkbox" @change="selectAll" :checked="selectedIds.length === filteredMistakes.length && filteredMistakes.length > 0" />
           全选
         </label>
         <button @click="toggleAllAnswers" class="btn">
@@ -65,7 +123,7 @@ const printPage = () => {
     <!-- Mistakes List -->
     <div class="mistake-list">
       <div 
-        v-for="(mistake, index) in mistakes" 
+        v-for="(mistake, index) in filteredMistakes" 
         :key="mistake.id"
         class="mistake-card"
         :class="{ 
@@ -111,6 +169,37 @@ const printPage = () => {
 .mistake-system {
   font-family: inherit;
   color: var(--vp-c-text-1);
+}
+
+.search-panel {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-mute);
+  font-size: 14px;
+  color: var(--vp-c-text-1);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.filter-input:focus {
+  border-color: var(--vp-c-brand-1);
+}
+
+.input-text {
+  flex: 1;
+  min-width: 200px;
+}
+
+.select-box {
+  cursor: pointer;
 }
 
 .print-controls {
