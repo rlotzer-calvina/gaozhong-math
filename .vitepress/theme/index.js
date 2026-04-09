@@ -1,5 +1,6 @@
 import DefaultTheme from 'vitepress/theme';
 import './style.css';
+import 'katex/dist/katex.min.css';
 import Layout from './Layout.vue';
 
 export default {

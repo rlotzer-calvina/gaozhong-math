@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 import mistakesData from '../../docs/data/mistakes.json'
 import katex from 'katex'
-import 'katex/dist/katex.min.css'
 
 const mistakes = ref(mistakesData)
 const selectedIds = ref([])
@@ -78,15 +77,19 @@ const printPage = () => {
 
 // Math Rendering
 const renderMath = (text) => {
-  if (!text) return ''
-  return text.replace(/\$([\s\S]+?)\$/g, (match, math) => {
+  if (!text) return '';
+  // 匹配 $...$ 格式，注意处理 JSON 可能存在的双反斜杠转义
+  return text.replace(/\$([\s\S]+?)\$/g, (match, formula) => {
     try {
-      return katex.renderToString(math, { throwOnError: false })
+      return katex.renderToString(formula, {
+        throwOnError: false,
+        displayMode: false
+      });
     } catch (e) {
-      return match
+      return match;
     }
-  })
-}
+  });
+};
 </script>
 
 <template>
