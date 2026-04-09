@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import mistakesData from '../../docs/data/mistakes.json'
 import katex from 'katex'
 import 'katex/dist/katex.min.css'
@@ -77,24 +77,23 @@ const printPage = () => {
 }
 
 // Math Rendering
+// 极其强力的渲染函数
 const renderMath = (text) => {
   if (!text) return '';
+  // 1. 强制清理：将所有的双反斜杠还原为单反斜杠，这是 JSON 动态数据的命门
+  let cleanText = text.replace(/\\\\/g, '\\');
   
-  // 【关键】只处理 JSON 转义产生的双斜杠，绝对不要去动 \{ 或 \} 等数学指令
-  let rawText = text.replace(/\\\\/g, '\\');
-
-  // 使用更精准的正则匹配 $...$
-  return rawText.replace(/\$([\s\S]+?)\$/g, (match, formula) => {
+  // 2. 正则匹配：使用最稳健的模式匹配 $...$
+  return cleanText.replace(/\$([^\$]+)\$/g, (match, formula) => {
     try {
-      return katex.renderToString(formula.trim(), {
+      return katex.renderToString(formula, {
         throwOnError: false,
         displayMode: false,
-        // 增加对 SES 常用符号的兼容
         macros: { "\\mid": "|" }
       });
     } catch (e) {
-      console.error("KaTeX Error:", e);
-      return match; // 失败则原样返回
+      console.error("KaTeX 渲染失败:", e, "原始公式:", formula);
+      return match;
     }
   });
 };
@@ -163,14 +162,14 @@ const renderMath = (text) => {
         </div>
         
         <div class="card-body">
-          <div class="question" v-html="renderMath(mistake.question_latex || mistake.question)"></div>
+          <div v-html="renderMath(mistake.question_latex)"></div>
           
           <div class="answer-section" v-show="showAnswers[mistake.id] || false">
             <div class="answer-block">
-              <strong>【答案】</strong> <span v-html="renderMath(mistake.answer_latex || mistake.answer)"></span>
+              <strong>【答案】</strong> <div v-html="renderMath(mistake.answer_latex)"></div>
             </div>
             <div class="analysis-block">
-              <strong>【解析】</strong> <div class="analysis-content" v-html="renderMath(mistake.analysis)"></div>
+              <strong>【解析】</strong> <div v-html="renderMath(mistake.analysis)"></div>
             </div>
           </div>
         </div>
@@ -186,7 +185,7 @@ const renderMath = (text) => {
 </template>
 
 <style scoped>
-:deep(.katex) { font-size: 1.1em !important; }
+:deep(.katex) { font-size: 1.15em !important; line-height: 1.2; }
 
 .mistake-system {
   font-family: inherit;
