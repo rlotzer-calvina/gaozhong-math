@@ -24,6 +24,7 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '高一数学', link: '/chapters/sets' },
+      { text: '错题本', link: '/chapters/mistakes' },
     ],
     sidebar: {
       '/chapters/': [
@@ -37,6 +38,12 @@ export default defineConfig({
             { text: '1.4 充分条件与必要条件', link: '/chapters/1-4-conditions' },
             { text: '1.5 全称量词与存在量词', link: '/chapters/1-5-quantifiers' },
             { text: '1.6 反证法', link: '/chapters/1-6-proofs' }
+          ]
+        },
+        {
+          text: '错题本',
+          items: [
+            { text: '错题集锦', link: '/chapters/mistakes' }
           ]
         }
       ]
