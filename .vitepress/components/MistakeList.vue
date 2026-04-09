@@ -80,22 +80,21 @@ const printPage = () => {
 const renderMath = (text) => {
   if (!text) return '';
   
-  // 【关键步骤】处理 JSON 双转义：将 \\ 替换为 \，处理常见 LaTeX 符号
-  let cleanText = text
-    .replace(/\\\\/g, '\\')      // 还原双斜杠
-    .replace(/\\\{/g, '{')      // 还原大括号转义
-    .replace(/\\\}/g, '}');     // 还原大括号转义
+  // 【关键】只处理 JSON 转义产生的双斜杠，绝对不要去动 \{ 或 \} 等数学指令
+  let rawText = text.replace(/\\\\/g, '\\');
 
-  // 匹配 $...$ 格式并执行 KaTeX 渲染
-  return cleanText.replace(/\$([\s\S]+?)\$/g, (match, formula) => {
+  // 使用更精准的正则匹配 $...$
+  return rawText.replace(/\$([\s\S]+?)\$/g, (match, formula) => {
     try {
       return katex.renderToString(formula.trim(), {
         throwOnError: false,
         displayMode: false,
-        macros: { "\\mid": "|" } 
+        // 增加对 SES 常用符号的兼容
+        macros: { "\\mid": "|" }
       });
     } catch (e) {
-      return match; // 失败则回退原始
+      console.error("KaTeX Error:", e);
+      return match; // 失败则原样返回
     }
   });
 };
@@ -188,7 +187,6 @@ const renderMath = (text) => {
 
 <style scoped>
 :deep(.katex) { font-size: 1.1em !important; }
-:deep(.katex-html) { white-space: normal !important; }
 
 .mistake-system {
   font-family: inherit;
