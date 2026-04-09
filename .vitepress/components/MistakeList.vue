@@ -80,19 +80,17 @@ const printPage = () => {
 // 极其强力的渲染函数
 const renderMath = (text) => {
   if (!text) return '';
-  // 1. 强制清理：将所有的双反斜杠还原为单反斜杠，这是 JSON 动态数据的命门
   let cleanText = text.replace(/\\\\/g, '\\');
-  
-  // 2. 正则匹配：使用最稳健的模式匹配 $...$
-  return cleanText.replace(/\$([^\$]+)\$/g, (match, formula) => {
+  // 兼容单美元符和双美元符，并支持多行匹配
+  return cleanText.replace(/\$\$?([\s\S]+?)\$\$?/g, (match, formula) => {
     try {
-      return katex.renderToString(formula, {
+      return katex.renderToString(formula.trim(), {
         throwOnError: false,
-        displayMode: false,
+        displayMode: match.startsWith('$$'),
         macros: { "\\mid": "|" }
       });
     } catch (e) {
-      console.error("KaTeX 渲染失败:", e, "原始公式:", formula);
+      console.error("KaTeX Error:", e, formula);
       return match;
     }
   });
